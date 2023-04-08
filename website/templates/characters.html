@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Characters</title>
+
+    <style>
+
+        body {
+			background-image: url("static/wallpaper2.jpg");
+			background-size: cover;
+			background-position: center;
+			background-repeat: no-repeat;
+			background-attachment: fixed;
+			min-height: 100vh;
+		}
+
+
+        #character-list {
+          display: flex;
+          flex-direction: column;
+          flex-wrap: wrap;
+          height: 100vh;
+          overflow-y: auto;
+          justify-content: flex-start;
+          align-content: flex-start;
+        }
+
+        .character-button {
+          background-color: green;
+          color: white;
+          padding: 10px;
+          border: none;
+          border-radius: 5px;
+          cursor: pointer;
+          display: block;
+          width: 9%;
+          margin: 5px 5px;
+        }
+
+        .timestamp-box {
+          background-image: url("static/scroll.jpg");
+          background-size: contain;
+          position: fixed;
+          top: 50%;
+          left: 65%;
+          transform: translate(-50%, -50%);
+          border: 1px solid black;
+          padding: 10px;
+          z-index: 1;
+          width: 600px;
+          height: 400px;
+          overflow-y: scroll;
+        }
+
+        #timestamp-box::-webkit-scrollbar {
+          display: none;
+        }
+
+        .timestamp-text {
+          font-family: monospace;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+          opacity: 1;
+          background-color: transparent;
+        }
+
+        .timestamp-text > div {
+          text-align: center;
+          margin: 10px 0;
+          opacity: 1;
+        }
+
+    </style>
+</head>
+<body>
+    <div id="character-list"></div>
+
+    <div id="timestamp-box" class="timestamp-box">
+      <div id="timestamp-text" class="timestamp-text"></div>
+    </div>
+
+  <script>
+    const characters = {{ character_names|tojson }};
+    const characterDict = {{ character_dict|tojson }};
+    const characterList = document.getElementById('character-list');
+    const timestampBox = document.getElementById('timestamp-box');
+    const timestampText = document.getElementById('timestamp-text');
+    let index = 0;
+
+    function displayNextCharacter() {
+      if (index >= characters.length) return;
+
+      characters.sort();
+      const character = characters[index];
+      const characterButton  = document.createElement('button');
+      characterButton.innerHTML = character;
+      characterButton.className = 'character-button';
+
+      function createNewButton(character) {
+          const newButtonDiv = document.createElement('div');
+          const newButton = document.createElement('button');
+          newButton.innerHTML = `View Image Dataset of ${character}`;
+          newButton.className = 'character-button';
+
+          newButton.addEventListener('click', function() {
+            window.location.href = `displaycharacter/${character}`;
+          });
+
+          const existingNewButton = document.getElementById('new-button');
+          if (existingNewButton) {
+            existingNewButton.remove();
+          }
+
+          newButton.style.position = 'absolute';
+          newButton.style.top = 'calc(50% + 240px)';
+          newButton.style.left = '60%';
+          newButton.style.width = '10%';
+          //newButton.style.transform = 'translateX(-58%)';
+
+          newButtonDiv.appendChild(newButton); // Place the button inside the new div element
+          timestampBox.after(newButtonDiv); // Place the new div element after the timestamp box
+          newButton.id = 'new-button';
+        }
+
+      characterButton.addEventListener('click', function() {
+        let time_stamp_count = 0;
+        const time_stamps = characterDict[character];
+        let timestampStr = '';
+
+        for (const time_stamp of time_stamps) {
+          time_stamp_count++;
+          timestampStr += `<div>Time Stamp ${time_stamp_count}: ${time_stamp[0]} --> ${time_stamp[1]}</div>`;
+        }
+
+        total_time_stamp = `<div>${character} was found ${time_stamp_count} times in the script:</div>`;
+        timestampText.innerHTML = total_time_stamp + timestampStr.trim();
+        timestampBox.style.display = 'block';
+
+        createNewButton(character);
+      });
+      characterList.appendChild(characterButton);
+
+      index++;
+      setTimeout(displayNextCharacter, 100); // Adjust the delay time as needed
+    }
+    timestampBox.style.display = 'none';
+    displayNextCharacter();
+  </script>
+</body>
+</html>

@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ object }} Image Gallery</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+        <style>
+            .image-size {
+                width: 70%;
+                height: auto;
+            }
+
+            #current-image {
+                display: block;
+                margin: auto;
+            }
+
+             #arrow-buttons {
+                 text-align: center;
+            }
+
+            .object-button {
+              background-color: green;
+              color: white;
+              padding: 10px;
+              margin: 5px;
+              border: none;
+              border-radius: 5px;
+              cursor: pointer;
+            }
+            #image-container {
+              display: flex;
+              flex-direction: column;
+              justify-content: center;
+              align-items: center;
+            }
+            .header {
+                background-color: rgba(255, 255, 255, 0.7);
+                width: 100%;
+                border: 0px solid #ddd;
+                padding: 20px;
+                text-align: center;
+                height: 5px;
+            }
+
+            .image-count {
+                margin: 10px 0;
+                text-align: center;
+              }
+
+        </style>
+
+
+</head>
+
+
+<body>
+    <h1 class="header">{{ object|capitalize }} Image Gallery</h1>
+<!--    {% for image in image_files %}-->
+<!--        <img src="{{ url_for('static', object=object, filename='frame_images/' + object + '/' + image) }}" alt="{{ image }}">-->
+<!--    {% endfor %}-->
+<!--    -->
+    <div id="image-container">
+        <img id="current-image" class="image-size" src="{{ url_for('static', object=object, filename='frame_images/' + object + '/' + image_files[0]) }}" alt="{{ image_files[0] }}">
+        <p class="image-count"></p>
+        <label id="image-label">{{ image_files[0] }}</label>
+
+        <div id="arrow-buttons">
+            <button id="prev-button" class="object-button">Previous Image</button>
+            <button id="next-button" class="object-button">Next Image</button>
+        </div>
+
+        <div id="prediction-results"></div>
+    </div>
+
+    <script>src="https://code.jquery.com/jquery-3.6.0.min.js"</script>
+    <script>
+        $(document).ready(function() {
+            var imageIndex = 0;
+            var image_files = {{ image_files | tojson }};
+
+            // Set the initial image source
+            $('#current-image').attr('src', '{{ url_for("static", object=object, filename="frame_images/" + object + "/" + image_files[0]) }}');
+            var imageFilename = $('#current-image').attr('src').split('/').pop();
+            var label = imageFilename.replace('.jpg', '');
+            label = label.replace('_', ' --> ');
+            label = label.split('?')[0];
+
+            // Update the label text in the <div> with id 'image-label'
+            $('#image-label').text('Timestamp: ' + label);
+            $('.image-count').text('Image: ' + (imageIndex + 1) + '/' + image_files.length);
+
+
+
+
+            // Handle next button click
+            $('#next-button').click(function() {
+                if (imageIndex < image_files.length - 1) {
+                    imageIndex++;
+                    $('#current-image').attr('src', '{{ url_for("static", object=object, filename="frame_images/" + object + "/" + image_files[0]) }}'.replace(image_files[0], image_files[imageIndex]));
+                    var imageFilename = $('#current-image').attr('src').split('/').pop();
+                    var label = imageFilename.replace('.jpg', '');
+                    label = label.replace('_', ' --> ');
+                    label = label.split('?')[0];
+
+                    // Update the label text in the <div> with id 'image-label'
+                    $('#image-label').text('Timestamp: ' + label);
+                    $('.image-count').text('Image: ' + (imageIndex + 1) + '/' + image_files.length);
+                }
+            });
+
+            // Handle previous button click
+            $('#prev-button').click(function() {
+                if (imageIndex > 0) {
+                    imageIndex--;
+                    $('#current-image').attr('src', '{{ url_for("static", object=object, filename="frame_images/" + object + "/" + image_files[0]) }}'.replace(image_files[0], image_files[imageIndex]));
+                    var imageFilename = $('#current-image').attr('src').split('/').pop();
+                    var label = imageFilename.replace('.jpg', '');
+                    label = label.replace('_', ' --> ');
+                    label = label.split('?')[0];
+
+                    // Update the label text in the <div> with id 'image-label'
+                    $('#image-label').text('Timestamp: ' + label);
+                    $('.image-count').text('Image: ' + (imageIndex + 1) + '/' + image_files.length);
+                }
+            });
+        });
+
+    </script>
+
+</body>
+</html>

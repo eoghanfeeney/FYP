@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ character }} Image Gallery</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+        <style>
+
+            body {
+               background-color: lightgreen; /* set the background color to light gray */
+            }
+
+            .image-size {
+                width: 70%;
+                height: auto;
+            }
+
+            #current-image {
+                display: block;
+                margin: auto;
+            }
+
+             #arrow-buttons {
+                 text-align: center;
+            }
+
+            .character-button {
+              background-color: green;
+              color: white;
+              padding: 10px;
+              margin: 5px;
+              border: none;
+              border-radius: 5px;
+              cursor: pointer;
+            }
+            #image-container {
+              display: flex;
+              flex-direction: column;
+              justify-content: center;
+              align-items: center;
+            }
+            .header {
+                width: 100%;
+                border: 0px solid #ddd;
+                padding: 20px;
+                text-align: center;
+                height: 5px;
+            }
+
+            .image-count {
+                margin: 10px 0;
+                text-align: center;
+              }
+
+        </style>
+
+
+</head>
+
+
+<body>
+    <h1 class="header">{{ character|capitalize }} Image Gallery</h1>
+<!--    {% for image in image_files %}-->
+<!--        <img src="{{ url_for('static', character=character, filename='frame_images/' + character + '/' + image) }}" alt="{{ image }}">-->
+<!--    {% endfor %}-->
+<!--    -->
+    <div id="image-container">
+        <img id="current-image" class="image-size" src="{{ url_for('static', character=character, filename='frame_images/' + character + '/' + image_files[0]) }}" alt="{{ image_files[0] }}">
+        <p class="image-count"></p>
+        <label id="image-label">{{ image_files[0] }}</label>
+        <div id="arrow-buttons">
+            <button id="prev-button" class="character-button">Previous Image</button>
+            <button id="next-button" class="character-button">Next Image</button>
+        </div>
+        {% if character in ['shrek', 'donkey', 'puss', 'fiona', 'charming', 'godmother'] %}
+        <button id="classify-button" class="character-button">Classify Image</button>
+        <label id="prediction">{{ prediction }}</label>
+    {% endif %}
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            var imageIndex = 0;
+            var image_files = {{ image_files | tojson }};
+            var predictions = {{ predictions | tojson }};
+
+            // Set the initial image source
+            $('#current-image').attr('src', '{{ url_for("static", character=character, filename="frame_images/" + character + "/" + image_files[0]) }}');
+            var imageFilename = $('#current-image').attr('src').split('/').pop();
+            var label = imageFilename.replace('.jpg', '');
+            label = label.replace('_', ' --> ');
+            label = label.split('?')[0];
+
+            // Update the label text
+            $('#image-label').text('Timestamp: ' + label);
+            $('.image-count').text('Image: ' + (imageIndex + 1) + '/' + image_files.length);
+
+            // Handle next button click
+            $('#next-button').click(function() {
+                if (imageIndex < image_files.length - 1) {
+                    imageIndex++;
+                    $('#current-image').attr('src', '{{ url_for("static", character=character, filename="frame_images/" + character + "/" + image_files[0]) }}'.replace(image_files[0], image_files[imageIndex]));
+                    var imageFilename = $('#current-image').attr('src').split('/').pop();
+                    var label = imageFilename.replace('.jpg', '');
+                    label = label.replace('_', ' --> ');
+                    label = label.split('?')[0];
+
+                    // Update the label text in the <div> with id 'image-label'
+                    $('#image-label').text('Timestamp: ' + label);
+                    $('.image-count').text('Image: ' + (imageIndex + 1) + '/' + image_files.length);
+
+                    $('#prediction').text('');
+                }
+            });
+
+            // Handle previous button click
+            $('#prev-button').click(function() {
+                if (imageIndex > 0) {
+                    imageIndex--;
+                    $('#current-image').attr('src', '{{ url_for("static", character=character, filename="frame_images/" + character + "/" + image_files[0]) }}'.replace(image_files[0], image_files[imageIndex]));
+                    var imageFilename = $('#current-image').attr('src').split('/').pop();
+                    var label = imageFilename.replace('.jpg', '');
+                    label = label.replace('_', ' --> ');
+                    label = label.split('?')[0];
+
+                    // Update the label text in the <div> with id 'image-label'
+                    $('#image-label').text('Timestamp: ' + label);
+                    $('.image-count').text('Image: ' + (imageIndex + 1) + '/' + image_files.length);
+
+                    $('#prediction').text('');
+                }
+            });
+
+            // Handle predict button click
+            $('#classify-button').click(function() {
+                var prediction = predictions[imageIndex];
+                console.log(predictions[imageIndex]);
+
+                if (prediction == 0) {
+                  console.log('The image is Charming');
+                  $('#prediction').text('The image is Charming');
+                }
+                else if (prediction == 1) {
+                  console.log('The image is Donkey');
+                  $('#prediction').text('The image is Donkey');
+                }
+                else if (prediction == 2) {
+                  console.log('The image is Fiona');
+                  $('#prediction').text('The image is Fiona');
+                }
+                else if (prediction == 3) {
+                  console.log('The image is Godmother');
+                  $('#prediction').text('The image is Godmother');
+                }
+                else if (prediction == 4) {
+                  console.log('The image is Puss');
+                  $('#prediction').text('The image is Puss');
+                }
+                else if (prediction == 5) {
+                  console.log('The image is Shrek');
+                  $('#prediction').text('The image is Shrek');
+                }
+                else {
+                  console.log('Unknown character');
+                  $('#prediction').text('Unknown Character');
+                }
+
+            });
+            console.log(predictions);
+        });
+
+    </script>
+
+</body>
+</html>

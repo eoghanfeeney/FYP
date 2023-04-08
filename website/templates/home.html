@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+    <style>
+		body {
+			background-image: url("static/wallpaper.jpg");
+
+			background-size: cover;
+			background-position: center 75%;
+			background-repeat: no-repeat;
+			background-attachment: fixed;
+			min-height: 100vh;
+		}
+		body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: -1;
+        }
+        .header {
+			background-color: rgba(255, 255, 255, 0.7);
+			width: 100%;
+			border: 0px solid #ddd;
+			padding: 20px;
+			text-align: center;
+			height: 150px;
+		}
+		.centered {
+			text-align: center;
+		}
+
+		.characters-button-container {
+          position: absolute;
+          top: 50%;
+          left: 20%;
+          transform: translateY(-50%);
+        }
+
+        .characters-button {
+          background-color: #4CAF50; /* Green */
+          border: none;
+          color: white;
+          padding: 15px 32px;
+          text-align: center;
+          text-decoration: none;
+          display: inline-block;
+          font-size: 16px;
+          margin: 4px 2px;
+          cursor: pointer;
+        }
+
+        .objects-button-container {
+          position: absolute;
+          top: 50%;
+          left: 70%;
+          transform: translateY(-50%);
+        }
+
+        .objects-button {
+          background-color: #4CAF50; /* Green */
+          border: none;
+          color: white;
+          padding: 15px 32px;
+          text-align: center;
+          text-decoration: none;
+          display: inline-block;
+          font-size: 16px;
+          margin: 4px 2px;
+          cursor: pointer;
+        }
+
+	</style>
+
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+      integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+      crossorigin="anonymous"
+    />
+
+    <title>Home</title>
+</head>
+<body>
+
+    <div class="header">
+        <h1 class="centred">Welcome to Our Text Analysis Tool as an Aid for Object and Character Recognition in Shrek 2!</h1>
+    </div>
+    <script
+      src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+      integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+      integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+      integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+      crossorigin="anonymous"
+    ></script>
+
+    <div class="characters-button-container">
+        <a class="characters-button" href="characters">Characters</a>
+    </div>
+
+    <div class="objects-button-container">
+      <a class="objects-button" href="objects">Objects</a>
+    </div>
+</body>
+</html>
